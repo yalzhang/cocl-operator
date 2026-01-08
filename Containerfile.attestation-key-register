@@ -1,0 +1,34 @@
+# Based on ./operator/attestation-key-register/Containerfile
+# SPDX-FileCopyrightText: Alice Frosi <afrosi@redhat.com>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+ARG build_type
+FROM ghcr.io/trusted-execution-clusters/buildroot AS builder
+ARG build_type
+WORKDIR /build
+
+COPY operator/Makefile .
+RUN make build-tools
+
+COPY operator/Cargo.toml operator/Cargo.lock operator/go.mod operator/go.sum ./
+COPY operator/api api
+COPY operator/lib lib
+RUN make crds-rs
+
+COPY operator/attestation-key-register/Cargo.toml attestation-key-register/
+COPY operator/attestation-key-register/src/lib.rs attestation-key-register/src/
+
+# Set only required crates as members to minimize rebuilds upon changes.
+# In debug builds, build dependencies to avoid full rebuild.
+RUN sed -i 's/members =.*/members = ["lib", "attestation-key-register"]/' Cargo.toml && \
+    if [ "$build_type" = debug ]; then cargo build -p attestation-key-register; fi
+
+COPY operator/attestation-key-register/src attestation-key-register/src
+RUN cargo build -p attestation-key-register $(if [ "$build_type" = release ]; then echo --release; fi)
+
+FROM quay.io/fedora/fedora:42
+ARG build_type
+COPY --from=builder "/build/target/$build_type/attestation-key-register" /usr/bin
+EXPOSE 8001
+ENTRYPOINT ["/usr/bin/attestation-key-register"]
