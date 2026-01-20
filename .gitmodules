@@ -1,0 +1,4 @@
+[submodule "operator"]
+	path = operator
+	url = https://github.com/trusted-execution-clusters/operator.git
+	branch = main

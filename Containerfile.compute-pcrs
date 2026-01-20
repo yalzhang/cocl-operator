@@ -1,0 +1,38 @@
+# Based on ./operator/compute-pcrs/Containerfile
+# SPDX-FileCopyrightText: Alice Frosi <afrosi@redhat.com>
+# SPDX-FileCopyrightText: Jakob Naucke <jnaucke@redhat.com>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+ARG build_type
+FROM ghcr.io/trusted-execution-clusters/buildroot AS builder
+ARG build_type
+WORKDIR /build
+
+COPY operator/Makefile .
+RUN make build-tools
+
+COPY operator/Cargo.toml operator/Cargo.lock operator/go.mod operator/go.sum ./
+COPY operator/api api
+COPY operator/lib lib
+RUN make crds-rs
+
+COPY operator/compute-pcrs/Cargo.toml compute-pcrs/
+COPY operator/compute-pcrs/src/lib.rs compute-pcrs/src/
+
+# Set only required crates as members to minimize rebuilds upon changes.
+# Build dependencies in lower layer to make use of caching.
+# Pin reference-values to specific commit for reproducible builds
+ARG REFERENCE_VALUES_COMMIT=52e7c3084891e2a30544a3c1df624a68d25fe151
+RUN sed -i 's/members =.*/members = ["compute-pcrs", "lib"]/' Cargo.toml && \
+    git clone https://github.com/trusted-execution-clusters/reference-values && \
+    cd reference-values && git checkout ${REFERENCE_VALUES_COMMIT} && cd .. && \
+    cargo build -p compute-pcrs --lib $(if [ "$build_type" = release ]; then echo --release; fi)
+
+COPY operator/compute-pcrs/src compute-pcrs/src
+RUN cargo build -p compute-pcrs $(if [ "$build_type" = release ]; then echo --release; fi)
+
+FROM quay.io/fedora/fedora:42
+ARG build_type
+COPY --from=builder "/build/target/$build_type/compute-pcrs" /usr/bin
+COPY --from=builder /build/reference-values /reference-values

@@ -1,0 +1,98 @@
+# SPDX-FileCopyrightText: Yalan Zhang <yalzhang@redhat.com>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+FROM registry.access.redhat.com/ubi9/ubi AS builder
+
+# Required build arguments (no defaults - must be provided explicitly)
+# Example: podman build -f Containerfile.bundle \
+#   --build-arg OPERATOR_IMAGE=quay.io/myorg/cocl-operator:0.1.0 \
+#   --build-arg COMPUTE_PCRS_IMAGE=quay.io/myorg/compute-pcrs:0.1.0 \
+#   --build-arg REG_SERVER_IMAGE=quay.io/myorg/registration-server:0.1.0 \
+#   --build-arg ATTESTATION_KEY_REGISTER_IMAGE=quay.io/myorg/attestation-key-register:0.1.0 \
+#   --build-arg TRUSTEE_IMAGE=quay.io/trustee/kbs:tag \
+#   --build-arg TAG=0.1.0 \
+#   --build-arg NAMESPACE=confidential-clusters \
+#   -t quay.io/myorg/cocl-operator-bundle:0.1.0 .
+ARG OPERATOR_IMAGE
+ARG COMPUTE_PCRS_IMAGE
+ARG REG_SERVER_IMAGE
+ARG ATTESTATION_KEY_REGISTER_IMAGE
+ARG TRUSTEE_IMAGE
+ARG TAG
+ARG NAMESPACE
+
+ARG YQ_VERSION=v4.48.1
+ARG OPERATOR_SDK_VERSION=v1.38.0
+
+# SHA256 checksums for downloaded tools (for supply chain security)
+ARG YQ_SHA256=99df6047f5b577a9d25f969f7c3823ada3488de2e2115b30a0abb10d9324fd9f
+ARG OPERATOR_SDK_SHA256=35f759010c05aef7fed9deb31a46a6682aedff7abf8c109331ccd931c966e6c0
+
+RUN dnf -y update && \
+    dnf install -y git make golang wget && \
+    wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -O /usr/bin/yq && \
+    echo "${YQ_SHA256}  /usr/bin/yq" | sha256sum -c - && \
+    chmod +x /usr/bin/yq && \
+    wget https://github.com/operator-framework/operator-sdk/releases/download/${OPERATOR_SDK_VERSION}/operator-sdk_linux_amd64 -O /usr/bin/operator-sdk && \
+    echo "${OPERATOR_SDK_SHA256}  /usr/bin/operator-sdk" | sha256sum -c - && \
+    chmod +x /usr/bin/operator-sdk && \
+    dnf clean all
+
+RUN mkdir -p /workspace/source && \
+    chown -R 1001:1001 /workspace
+
+USER 1001
+
+ENV HOME=/workspace
+WORKDIR /workspace/source
+
+# Note: git submodule initialization should be done before the build
+COPY --chown=1001:1001 . .
+
+# Note: We use upstream's CSV and metadata templates as-is
+# All downstream customizations are applied by bundle/customize-bundle.sh after generation
+
+# Generate manifests first (creates CRDs and RBAC rules)
+# Extract REGISTRY from OPERATOR_IMAGE (everything before the last /)
+RUN make -C operator manifests \
+    NAMESPACE="${NAMESPACE}" \
+    REGISTRY="${OPERATOR_IMAGE%/*}" \
+    TAG="${TAG}"
+
+# Generate bundle using upstream script
+# The script will:
+# - Copy CRDs from config/crd/
+# - Copy RBAC from config/rbac/
+# - Inject RBAC rules into CSV
+# - Patch image references with build args
+# - Validate the bundle with operator-sdk
+# Note: We must pass REGISTRY to make, otherwise Makefile recalculates image URLs from its default REGISTRY
+RUN cd operator && \
+    make bundle \
+    TAG="${TAG}" \
+    NAMESPACE="${NAMESPACE}" \
+    REGISTRY="${OPERATOR_IMAGE%/*}" \
+    OPERATOR_IMAGE="${OPERATOR_IMAGE}" \
+    COMPUTE_PCRS_IMAGE="${COMPUTE_PCRS_IMAGE}" \
+    REG_SERVER_IMAGE="${REG_SERVER_IMAGE}" \
+    ATTESTATION_KEY_REGISTER_IMAGE="${ATTESTATION_KEY_REGISTER_IMAGE}" \
+    TRUSTEE_IMAGE="${TRUSTEE_IMAGE}"
+
+# Apply downstream-specific customizations to the generated bundle
+RUN bash /workspace/source/bundle/customize-bundle.sh
+
+# STAGE 2: FINAL IMAGE
+FROM registry.access.redhat.com/ubi9/ubi-minimal
+
+COPY --from=builder /workspace/source/operator/bundle/manifests/ /manifests/
+COPY --from=builder /workspace/source/operator/bundle/metadata/ /metadata/
+
+USER 1001
+
+LABEL operators.operatorframework.io.bundle.mediatype.v1="registry+v1"
+LABEL operators.operatorframework.io.bundle.manifests.v1="manifests/"
+LABEL operators.operatorframework.io.bundle.metadata.v1="metadata/"
+LABEL operators.operatorframework.io.bundle.package.v1="cocl-operator"
+LABEL operators.operatorframework.io.bundle.channels.v1="alpha"
+LABEL operators.operatorframework.io.bundle.channel.default.v1="alpha"
