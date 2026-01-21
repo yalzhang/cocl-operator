@@ -4,23 +4,15 @@
 
 FROM registry.access.redhat.com/ubi9/ubi AS builder
 
-# Required build arguments (no defaults - must be provided explicitly)
+# Required build arguments
+# Note: Image references are managed via Konflux component nudges in bundle/update-bundle.sh
+# NAMESPACE is optional - only used during manifest generation, removed from final bundle
+# The bundle is namespace-agnostic and can be installed in any namespace
 # Example: podman build -f Containerfile.bundle \
-#   --build-arg OPERATOR_IMAGE=quay.io/myorg/cocl-operator:0.1.0 \
-#   --build-arg COMPUTE_PCRS_IMAGE=quay.io/myorg/compute-pcrs:0.1.0 \
-#   --build-arg REG_SERVER_IMAGE=quay.io/myorg/registration-server:0.1.0 \
-#   --build-arg ATTESTATION_KEY_REGISTER_IMAGE=quay.io/myorg/attestation-key-register:0.1.0 \
-#   --build-arg TRUSTEE_IMAGE=quay.io/trustee/kbs:tag \
 #   --build-arg TAG=0.1.0 \
-#   --build-arg NAMESPACE=confidential-clusters \
 #   -t quay.io/myorg/cocl-operator-bundle:0.1.0 .
-ARG OPERATOR_IMAGE
-ARG COMPUTE_PCRS_IMAGE
-ARG REG_SERVER_IMAGE
-ARG ATTESTATION_KEY_REGISTER_IMAGE
-ARG TRUSTEE_IMAGE
 ARG TAG
-ARG NAMESPACE
+ARG NAMESPACE=trusted-execution-clusters
 
 ARG YQ_VERSION=v4.48.1
 ARG OPERATOR_SDK_VERSION=v1.38.0
@@ -52,35 +44,19 @@ COPY --chown=1001:1001 . .
 
 # Note: We use upstream's CSV and metadata templates as-is
 # All downstream customizations are applied by bundle/customize-bundle.sh after generation
+#
+# Image references are managed via Konflux component nudges:
+# - bundle/update-bundle.sh contains hardcoded image pullspecs
+# - Konflux automatically updates these when component builds complete
+# - This replaces the previous build-arg approach
 
-# Generate manifests first (creates CRDs and RBAC rules)
-# Extract REGISTRY from OPERATOR_IMAGE (everything before the last /)
-RUN make -C operator manifests \
-    NAMESPACE="${NAMESPACE}" \
-    REGISTRY="${OPERATOR_IMAGE%/*}" \
-    TAG="${TAG}"
-
-# Generate bundle using upstream script
-# The script will:
-# - Copy CRDs from config/crd/
-# - Copy RBAC from config/rbac/
-# - Inject RBAC rules into CSV
-# - Patch image references with build args
-# - Validate the bundle with operator-sdk
-# Note: We must pass REGISTRY to make, otherwise Makefile recalculates image URLs from its default REGISTRY
-RUN cd operator && \
-    make bundle \
-    TAG="${TAG}" \
-    NAMESPACE="${NAMESPACE}" \
-    REGISTRY="${OPERATOR_IMAGE%/*}" \
-    OPERATOR_IMAGE="${OPERATOR_IMAGE}" \
-    COMPUTE_PCRS_IMAGE="${COMPUTE_PCRS_IMAGE}" \
-    REG_SERVER_IMAGE="${REG_SERVER_IMAGE}" \
-    ATTESTATION_KEY_REGISTER_IMAGE="${ATTESTATION_KEY_REGISTER_IMAGE}" \
-    TRUSTEE_IMAGE="${TRUSTEE_IMAGE}"
-
-# Apply downstream-specific customizations to the generated bundle
-RUN bash /workspace/source/bundle/customize-bundle.sh
+# Run the bundle generation script
+# This script will:
+# - Use hardcoded image pullspecs from bundle/update-bundle.sh
+# - Generate manifests (CRDs and RBAC rules)
+# - Generate bundle with operator-sdk
+# - Apply downstream customizations via customize-bundle.sh
+RUN TAG="${TAG}" NAMESPACE="${NAMESPACE}" bash /workspace/source/bundle/update-bundle.sh
 
 # STAGE 2: FINAL IMAGE
 FROM registry.access.redhat.com/ubi9/ubi-minimal
