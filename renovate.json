@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>konflux-ci/mintmaker//config/renovate/renovate.json"
+  ],
+  "packageRules": [
+    {
+      "description": "Group all component image digest updates into a single PR",
+      "matchFileNames": ["bundle/update-bundle.sh"],
+      "groupName": "component-images",
+      "groupSlug": "component-images",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "description": "Group Tekton task bundle updates by pipeline type",
+      "matchFileNames": [".tekton/**"],
+      "matchDatasources": ["docker"],
+      "matchPackagePatterns": ["quay.io/konflux-ci/tekton-catalog"],
+      "groupName": "tekton-tasks",
+      "groupSlug": "tekton-tasks",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "ci"
+    }
+  ],
+  "automerge": false,
+  "platformAutomerge": false,
+  "ignoreDeps": [
+    "registry.redhat.io/openshift4/ose-operator-registry",
+    "registry.redhat.io/openshift4/ose-operator-registry-rhel9"
+  ],
+  "prConcurrentLimit": 5,
+  "schedule": ["before 9am on Monday"],
+  "timezone": "Europe/Berlin"
+}
