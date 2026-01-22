@@ -11,7 +11,7 @@ set -euo pipefail
 export OPERATOR_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/cocl-operator@sha256:8d8de30db60a9de5aec134a38469029f0a9c7ffcd55320397f52dcdfbd7b6594"
 export COMPUTE_PCRS_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/compute-pcrs@sha256:266c94ffe156cb679f6631bebdb1deaa4602ec462e97719bfd620dffd1c4012c"
 export REG_SERVER_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/registration-server@sha256:6428a63b5139f7df4f043ba6d8cb348300c4da304e2740a30af6450a4841d4ef"
-export ATTESTATION_KEY_REGISTER_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/attestation-key-register@sha256:4786d2fbb58e1bfa8e950a6d79252c1fc3c1d05aab72fc3c36dcc7eb52c0997f"
+export ATTESTATION_KEY_REGISTER_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/attestation-key-register@sha256:2c1d82bf91beaf611383ad3d5f74de2f38c7ba252d94e59daa1a763cf4f4a4d7"
 export TRUSTEE_IMAGE="quay.io/trusted-execution-clusters/key-broker-service@sha256:1cf0ba784437f83e7f459e91f17615c9bf5c8068a0212b72fd9fc1babcbf6764"
 
 # These are passed in from the Containerfile build args
