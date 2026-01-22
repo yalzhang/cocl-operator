@@ -13,7 +13,9 @@
   "packageRules": [
     {
       "description": "Automerge only Konflux component nudge PRs",
-      "matchPaths": ["bundle/update-bundle.sh"],
+      "matchFileNames": [
+        "bundle/update-bundle.sh"
+      ],
       "automerge": true
     }
   ]
