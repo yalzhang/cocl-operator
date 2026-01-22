@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>konflux-ci/mintmaker//config/renovate/renovate.json"
+  ],
+  "automerge": false,
+  "platformAutomerge": true,
+  "ignoreTests": false,
+  "rebaseWhen": "conflicted",
+  "dockerfile": {
+    "enabled": false
+  },
+  "packageRules": [
+    {
+      "description": "Automerge only Konflux component nudge PRs",
+      "matchPaths": ["bundle/update-bundle.sh"],
+      "automerge": true
+    }
+  ]
+}
