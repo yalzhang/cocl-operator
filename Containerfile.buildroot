@@ -1,0 +1,39 @@
+# SPDX-FileCopyrightText: confidential-clusters team
+# SPDX-License-Identifier: CC0-1.0
+#
+# UBI-based buildroot with Rust + Go toolchains
+# Replaces ghcr.io/trusted-execution-clusters/buildroot (Fedora-based)
+# for Red Hat product certification requirements
+
+# Start with UBI9 Go Toolset (provides Go 1.25.3)
+FROM registry.access.redhat.com/ubi9/go-toolset:latest
+
+# Switch to root for package installation
+USER 0
+
+# Install build dependencies and Rust toolset
+# rust-toolset provides Rust 1.84+ (via RHEL repos)
+RUN dnf install -y \
+    rust-toolset \
+    cargo \
+    rustfmt \
+    gcc \
+    gcc-c++ \
+    make \
+    git \
+    openssl-devel \
+    pkgconfig \
+    && dnf clean all
+
+# Verify installations
+RUN rustc --version && \
+    cargo --version && \
+    rustfmt --version && \
+    go version && \
+    echo "Buildroot ready with Rust $(rustc --version | cut -d' ' -f2) and Go $(go version | cut -d' ' -f3)"
+
+# Set working directory for builds
+WORKDIR /build
+
+# Keep as root user for flexibility in build pipelines
+# Konflux build pipelines will handle user permissions
