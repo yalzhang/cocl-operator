@@ -3,6 +3,7 @@
 #
 # UBI-based buildroot with Rust + Go toolchains
 # Replaces ghcr.io/trusted-execution-clusters/buildroot (Fedora-based)
+# Konflux builds as quay.io/redhat-user-workloads/cocl-operator-tenant/buildroot:latest
 # for Red Hat product certification requirements
 
 # Start with UBI9 Go Toolset (provides Go 1.25.3)

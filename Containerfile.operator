@@ -6,7 +6,7 @@
 
 ARG build_type
 # Dependency build stage
-FROM ghcr.io/trusted-execution-clusters/buildroot AS builder
+FROM quay.io/redhat-user-workloads/cocl-operator-tenant/buildroot:latest AS builder
 ARG build_type
 WORKDIR /build
 
@@ -32,6 +32,6 @@ COPY operator/operator/src operator/src
 RUN cargo build -p operator $(if [ "$build_type" = release ]; then echo --release; fi)
 
 # Distribution stage
-FROM quay.io/fedora/fedora:42
+FROM registry.access.redhat.com/ubi9/ubi-minimal
 ARG build_type
 COPY --from=builder "/build/target/$build_type/operator" /usr/bin
