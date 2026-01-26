@@ -4,7 +4,7 @@
     "github>konflux-ci/mintmaker//config/renovate/renovate.json"
   ],
   "automerge": false,
-  "platformAutomerge": true,
+  "platformAutomerge": false,
   "ignoreTests": false,
   "rebaseWhen": "conflicted",
   "dockerfile": {
@@ -16,7 +16,8 @@
       "matchFileNames": [
         "bundle/update-bundle.sh"
       ],
-      "automerge": true
+      "automerge": true,
+      "platformAutomerge": false
     }
   ]
 }
