@@ -12,12 +12,13 @@
   },
   "packageRules": [
     {
-      "description": "Automerge only Konflux component nudge PRs",
+      "description": "Group all COCL component nudges into single PR and automerge",
       "matchFileNames": [
         "bundle/update-bundle.sh"
       ],
       "automerge": true,
-      "platformAutomerge": false
+      "platformAutomerge": false,
+      "groupName": "cocl-component-images"
     }
   ]
 }
