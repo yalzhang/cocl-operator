@@ -7,6 +7,7 @@
   "platformAutomerge": false,
   "ignoreTests": false,
   "rebaseWhen": "conflicted",
+  "ignorePaths": ["drift-cache"],
   "dockerfile": {
     "enabled": false
   },

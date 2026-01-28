@@ -8,6 +8,14 @@ FROM quay.io/redhat-user-workloads/cocl-operator-tenant/buildroot:latest AS buil
 ARG build_type
 WORKDIR /build
 
+# Drift detection - ensure local build matches upstream
+COPY drift-detection/detector.sh /detector.sh
+COPY drift-cache /drift-cache
+WORKDIR /tmp
+COPY operator/attestation-key-register/Containerfile .
+RUN /detector.sh ./Containerfile /drift-cache/attestation-key-register/Containerfile
+
+WORKDIR /build
 COPY operator/Makefile .
 RUN make build-tools
 
