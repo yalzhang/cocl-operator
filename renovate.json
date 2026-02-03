@@ -7,21 +7,23 @@
   "platformAutomerge": false,
   "ignoreTests": false,
   "rebaseWhen": "conflicted",
-  "ignorePaths": ["drift-cache"],
+  "ignorePaths": [
+    "drift-cache"
+  ],
   "dockerfile": {
     "enabled": false
   },
   "packageRules": [
     {
       "description": "Group all COCL component nudges into single PR and automerge",
-      "matchPackagePatterns": [
-        "quay.io/redhat-user-workloads/cocl-operator-tenant/*"
-      ],
       "groupName": "cocl-component-images",
       "groupSlug": "cocl-component-images",
       "automerge": true,
       "automergeType": "pr",
-      "platformAutomerge": true
+      "platformAutomerge": true,
+      "matchPackageNames": [
+        "/quay.io/redhat-user-workloads/cocl-operator-tenant/*/"
+      ]
     }
   ]
 }
