@@ -10,14 +10,14 @@ metadata:
     pipelinesascode.tekton.dev/cancel-in-progress: "false"
     pipelinesascode.tekton.dev/max-keep-runs: "3"
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
-      == "main" && (".tekton/cocl-operator-push.yaml".pathChanged() || ".tekton/cocl-operator-pull-request.yaml".pathChanged()
+      == "main" && (".tekton/confidential-cluster-operator-push.yaml".pathChanged() || ".tekton/confidential-cluster-operator-pull-request.yaml".pathChanged()
       || "Containerfile.operator".pathChanged() || "operator".pathChanged())
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: cocl-operator
-    appstudio.openshift.io/component: cocl-operator
+    appstudio.openshift.io/application: confidential-cluster-operator
+    appstudio.openshift.io/component: confidential-cluster-operator
     pipelines.appstudio.openshift.io/type: build
-  name: cocl-operator-on-push
+  name: confidential-cluster-operator-on-push
   namespace: cocl-operator-tenant
 spec:
   params:
@@ -26,7 +26,7 @@ spec:
   - name: revision
     value: '{{revision}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/cocl-operator-tenant/cocl-operator:{{revision}}
+    value: quay.io/redhat-user-workloads/cocl-operator-tenant/confidential-cluster-operator:{{revision}}
   - name: dockerfile
     value: Containerfile.operator
   - name: build-args
@@ -607,7 +607,7 @@ spec:
     - name: netrc
       optional: true
   taskRunTemplate:
-    serviceAccountName: build-pipeline-cocl-operator
+    serviceAccountName: build-pipeline-confidential-cluster-operator
   workspaces:
   - name: git-auth
     secret:

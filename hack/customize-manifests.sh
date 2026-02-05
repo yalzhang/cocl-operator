@@ -33,11 +33,11 @@ echo "-->  - Patching Namespace (${OPERATOR_DEPLOY_FILE})..."
 
 # 2. Patch the Deployment
 echo "-->  - Patching Deployment (${OPERATOR_DEPLOY_FILE})..."
-"$YQ" eval-all -i '(select(.kind == "Deployment") | .metadata.name) = "cocl-operator"' "${OPERATOR_DEPLOY_FILE}"
-"$YQ" eval-all -i '(select(.kind == "Deployment") | .metadata.labels.app) = "cocl-operator"' "${OPERATOR_DEPLOY_FILE}"
-"$YQ" eval-all -i '(select(.kind == "Deployment") | .spec.selector.matchLabels.app) = "cocl-operator"' "${OPERATOR_DEPLOY_FILE}"
-"$YQ" eval-all -i '(select(.kind == "Deployment") | .spec.template.metadata.labels.app) = "cocl-operator"' "${OPERATOR_DEPLOY_FILE}"
-"$YQ" eval-all -i '(select(.kind == "Deployment") | .spec.template.spec.containers[0].name) = "cocl-operator"' "${OPERATOR_DEPLOY_FILE}"
+"$YQ" eval-all -i '(select(.kind == "Deployment") | .metadata.name) = "confidential-cluster-operator"' "${OPERATOR_DEPLOY_FILE}"
+"$YQ" eval-all -i '(select(.kind == "Deployment") | .metadata.labels.app) = "confidential-cluster-operator"' "${OPERATOR_DEPLOY_FILE}"
+"$YQ" eval-all -i '(select(.kind == "Deployment") | .spec.selector.matchLabels.app) = "confidential-cluster-operator"' "${OPERATOR_DEPLOY_FILE}"
+"$YQ" eval-all -i '(select(.kind == "Deployment") | .spec.template.metadata.labels.app) = "confidential-cluster-operator"' "${OPERATOR_DEPLOY_FILE}"
+"$YQ" eval-all -i '(select(.kind == "Deployment") | .spec.template.spec.containers[0].name) = "confidential-cluster-operator"' "${OPERATOR_DEPLOY_FILE}"
 
 # 3. Patch the TrustedExecutionCluster Custom Resource
 echo "-->  - Patching TrustedExecutionCluster CR (${CLUSTER_CR_FILE})..."
@@ -49,6 +49,6 @@ echo "-->  - Patching TrustedExecutionCluster CR (${CLUSTER_CR_FILE})..."
 # 4. Patch config/rbac/kustomization.yaml to set the default namespace and the label
 echo "-->  - Setting default namespace in config/rbac/kustomization.yaml..."
 "$YQ" -i ".namespace = \"${NAMESPACE}\"" "${OPERATOR_DIR}/config/rbac/kustomization.yaml"
-"$YQ" -i '.commonLabels."app.kubernetes.io/name" = "cocl-operator"' "${OPERATOR_DIR}/config/rbac/kustomization.yaml"
+"$YQ" -i '.commonLabels."app.kubernetes.io/name" = "confidential-cluster-operator"' "${OPERATOR_DIR}/config/rbac/kustomization.yaml"
 
 echo "--> Customization complete."

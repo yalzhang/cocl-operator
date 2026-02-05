@@ -14,7 +14,7 @@ metadata:
       || "Containerfile.compute-pcrs".pathChanged() || "operator".pathChanged())
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: cocl-operator
+    appstudio.openshift.io/application: confidential-cluster-operator
     appstudio.openshift.io/component: compute-pcrs
     pipelines.appstudio.openshift.io/type: build
   name: compute-pcrs-on-push
