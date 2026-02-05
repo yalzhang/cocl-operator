@@ -14,7 +14,7 @@ metadata:
       || "Containerfile.registration-server".pathChanged() || "operator".pathChanged())
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: cocl-operator
+    appstudio.openshift.io/application: confidential-cluster-operator
     appstudio.openshift.io/component: registration-server
     pipelines.appstudio.openshift.io/type: build
   name: registration-server-on-push

@@ -11,7 +11,7 @@ metadata:
       == "main" && ("Containerfile.buildroot".pathChanged() || ".tekton/buildroot-push.yaml".pathChanged())
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: cocl-operator
+    appstudio.openshift.io/application: confidential-cluster-operator
     appstudio.openshift.io/component: buildroot
     pipelines.appstudio.openshift.io/type: build
   name: buildroot-on-push

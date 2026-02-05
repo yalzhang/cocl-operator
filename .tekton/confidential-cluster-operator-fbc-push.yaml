@@ -8,15 +8,15 @@ metadata:
     pipelinesascode.tekton.dev/cancel-in-progress: "false"
     pipelinesascode.tekton.dev/max-keep-runs: "3"
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
-      == "main" && (".tekton/cocl-operator-fbc-push.yaml".pathChanged() ||
-      ".tekton/cocl-operator-fbc-pull-request.yaml".pathChanged() || "v4.21/***".pathChanged()
+      == "main" && (".tekton/confidential-cluster-operator-fbc-push.yaml".pathChanged() ||
+      ".tekton/confidential-cluster-operator-fbc-pull-request.yaml".pathChanged() || "v4.21/***".pathChanged()
       || "operator/bundle/***".pathChanged())
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: cocl-operator-fbc
-    appstudio.openshift.io/component: cocl-operator-fbc
+    appstudio.openshift.io/application: confidential-cluster-operator-fbc
+    appstudio.openshift.io/component: confidential-cluster-operator-fbc
     pipelines.appstudio.openshift.io/type: build
-  name: cocl-operator-fbc-on-push
+  name: confidential-cluster-operator-fbc-on-push
   namespace: cocl-operator-tenant
 spec:
   params:
@@ -25,7 +25,7 @@ spec:
   - name: revision
     value: '{{revision}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/cocl-operator-tenant/cocl-operator-fbc:{{revision}}
+    value: quay.io/redhat-user-workloads/cocl-operator-tenant/confidential-cluster-operator-fbc:{{revision}}
   - name: build-platforms
     value:
     - linux/x86_64
@@ -184,7 +184,7 @@ spec:
         - "v4.21/catalog-template.json"
         - "--migrate-level=bundle-object-to-csv-metadata"
       - name: OPM_OUTPUT_PATH
-        value: "v4.21/catalog/cocl-operator/catalog.json"
+        value: "v4.21/catalog/confidential-cluster-operator/catalog.json"
       - name: IDMS_PATH
         value: ""
       runAfter:
@@ -424,7 +424,7 @@ spec:
     - name: netrc
       optional: true
   taskRunTemplate:
-    serviceAccountName: build-pipeline-cocl-operator-fbc
+    serviceAccountName: build-pipeline-confidential-cluster-operator-fbc
   workspaces:
   - name: git-auth
     secret:

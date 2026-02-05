@@ -1,8 +1,8 @@
-# Confidential Cluster Operator (cocl-operator)
+# Confidential Cluster Operator (confidential-cluster-operator)
 
 A Kubernetes operator that introduces a TrustedExecutionCluster Custom Resource Definition (CRD) for declaratively managing confidential clusters and the Trustee server, which handles remote attestation. The operator ensures proper configuration of KBS, attestation policies, and resource policies within the cluster.
 
-Downstream customization of the [trusted-execution-clusters operator](https://github.com/trusted-execution-clusters/operator) for Red Hat. Uses git submodules to track upstream and applies minimal downstream branding changes.
+Downstream customization of the [Trusted Execution Cluster Operator](https://github.com/trusted-execution-clusters/operator) for Red Hat. Uses git submodules to track upstream and applies minimal downstream branding changes.
 
 ## Prerequisites
 
@@ -45,9 +45,9 @@ Build and push operator and operand images:
 
 ```bash
 ${CONTAINER_CLI} build --build-arg build_type=release \
-  -t ${REGISTRY}/cocl-operator:${TAG} \
+  -t ${REGISTRY}/confidential-cluster-operator:${TAG} \
   -f Containerfile.operator .
-${CONTAINER_CLI} push ${REGISTRY}/cocl-operator:${TAG}
+${CONTAINER_CLI} push ${REGISTRY}/confidential-cluster-operator:${TAG}
 
 ${CONTAINER_CLI} build --build-arg build_type=release \
   -t ${REGISTRY}/compute-pcrs:${TAG} \
@@ -71,22 +71,22 @@ Build and push OLM bundle:
 
 ```bash
 ${CONTAINER_CLI} build -f Containerfile.bundle \
-  --build-arg OPERATOR_IMAGE=${REGISTRY}/cocl-operator:${TAG} \
+  --build-arg OPERATOR_IMAGE=${REGISTRY}/confidential-cluster-operator:${TAG} \
   --build-arg COMPUTE_PCRS_IMAGE=${REGISTRY}/compute-pcrs:${TAG} \
   --build-arg REG_SERVER_IMAGE=${REGISTRY}/registration-server:${TAG} \
   --build-arg ATTESTATION_KEY_REGISTER_IMAGE=${REGISTRY}/attestation-key-register:${TAG} \
   --build-arg TRUSTEE_IMAGE=quay.io/trusted-execution-clusters/key-broker-service:20260106 \
   --build-arg TAG=${TAG} \
   --build-arg NAMESPACE=${NAMESPACE} \
-  -t ${REGISTRY}/cocl-operator-bundle:${TAG} .
-${CONTAINER_CLI} push ${REGISTRY}/cocl-operator-bundle:${TAG}
+  -t ${REGISTRY}/confidential-cluster-operator-bundle:${TAG} .
+${CONTAINER_CLI} push ${REGISTRY}/confidential-cluster-operator-bundle:${TAG}
 ```
 
 ### 3. Deploy Bundle and apply Custom Resources
 
 ```bash
 kubectl create namespace ${NAMESPACE} || true
-operator-sdk run bundle ${REGISTRY}/cocl-operator-bundle:${TAG} --namespace ${NAMESPACE}
+operator-sdk run bundle ${REGISTRY}/confidential-cluster-operator-bundle:${TAG} --namespace ${NAMESPACE}
 ```
 
 ### 4. Apply Custom Resources
@@ -112,7 +112,7 @@ Refer to [upstream documentation](https://github.com/trusted-execution-clusters/
 Remove the operator:
 
 ```bash
-operator-sdk cleanup cocl-operator --namespace ${NAMESPACE}
+operator-sdk cleanup confidential-cluster-operator --namespace ${NAMESPACE}
 ```
 
 Remove the cluster (development only):
@@ -124,7 +124,7 @@ make -C operator cluster-down
 ## Repository Structure
 
 ```
-cocl-operator/
+confidential-cluster-operator/
 ├── operator/                            # Git submodule (upstream)
 ├── Containerfile.operator               # Operator image
 ├── Containerfile.compute-pcrs           # Compute-pcrs operand

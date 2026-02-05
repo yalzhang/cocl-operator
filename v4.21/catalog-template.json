@@ -3,23 +3,23 @@
     "entries": [
         {
             "schema": "olm.package",
-            "name": "cocl-operator",
+            "name": "confidential-cluster-operator",
             "defaultChannel": "alpha"
         },
         {
             "schema": "olm.channel",
             "name": "alpha",
-            "package": "cocl-operator",
+            "package": "confidential-cluster-operator",
             "entries": [
                 {
-                    "name": "cocl-operator.v0.1.0",
+                    "name": "confidential-cluster-operator.v0.1.0",
                     "skipRange": "<0.1.0"
                 }
             ]
         },
         {
             "schema": "olm.bundle",
-            "image": "quay.io/redhat-user-workloads/cocl-operator-tenant/cocl-operator-bundle@sha256:c6dc7b2938c8998d339e14b58317d90ee74f3d0963cf570a8ff810a532b6a438"
+            "image": "quay.io/redhat-user-workloads/cocl-operator-tenant/confidential-cluster-operator-bundle@sha256:c6dc7b2938c8998d339e14b58317d90ee74f3d0963cf570a8ff810a532b6a438"
         }
     ]
 }
