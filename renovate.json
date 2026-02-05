@@ -1,26 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "automerge": false,
-  "platformAutomerge": false,
-  "ignoreTests": false,
   "rebaseWhen": "conflicted",
   "ignorePaths": [
     "drift-cache"
   ],
   "dockerfile": {
     "enabled": false
-  },
-  "packageRules": [
-    {
-      "description": "Group all COCL component nudges into single PR and automerge",
-      "groupName": "cocl-component-images",
-      "groupSlug": "cocl-component-images",
-      "automerge": true,
-      "automergeType": "pr",
-      "platformAutomerge": true,
-      "matchPackageNames": [
-        "/quay.io/redhat-user-workloads/cocl-operator-tenant/*/"
-      ]
-    }
-  ]
+  }
 }
