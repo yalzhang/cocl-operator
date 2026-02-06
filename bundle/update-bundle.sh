@@ -10,8 +10,8 @@ set -euo pipefail
 # IMPORTANT: Must use @sha256: format, NOT tags - Konflux only updates digest references
 export OPERATOR_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/confidential-cluster-operator@sha256:8e5b8f72e317210f73292fe23cf29d5f526a1e73b2e3c4013a1615bf91004385"
 export COMPUTE_PCRS_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/compute-pcrs@sha256:fc48963848eb9c02665ffa20bfc56f62e9914f127fc3a1ce5b46a31afaec0ec3"
-export REG_SERVER_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/registration-server@sha256:4c8980e2ba3c9f5b306544ad484b502fd7ed32305efe09b306280a7129ded955"
-export ATTESTATION_KEY_REGISTER_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/attestation-key-register@sha256:e2489ccd10b92f6083f112dc16133130917aac563d901f3da5555c6e01f56f1f"
+export REG_SERVER_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/registration-server@sha256:0a5350f77b00299dae54d48ae0b132fa05dda417f50ef88b3c71e1ae82853f14"
+export ATTESTATION_KEY_REGISTER_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/attestation-key-register@sha256:f77afc8612834730b100b9545abdac466383daabdb346cc05586a012db1d7938"
 export TRUSTEE_IMAGE="quay.io/trusted-execution-clusters/key-broker-service@sha256:1cf0ba784437f83e7f459e91f17615c9bf5c8068a0212b72fd9fc1babcbf6764"
 
 # These are passed in from the Containerfile build args
