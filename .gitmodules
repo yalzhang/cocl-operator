@@ -5,3 +5,9 @@
 [submodule "drift-detection"]
 	path = drift-detection
 	url = https://github.com/arewm/drift-detection
+[submodule "compute-pcrs"]
+	path = compute-pcrs
+	url = https://github.com/trusted-execution-clusters/compute-pcrs.git
+[submodule "reference-values"]
+	path = reference-values
+	url = https://github.com/trusted-execution-clusters/reference-values.git
