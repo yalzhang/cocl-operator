@@ -17,25 +17,22 @@ COPY operator/compute-pcrs/Containerfile .
 RUN /detector.sh ./Containerfile /drift-cache/compute-pcrs/Containerfile
 
 WORKDIR /build
-COPY operator/Makefile .
-RUN make build-tools
-
-COPY operator/Cargo.toml operator/Cargo.lock operator/go.mod operator/go.sum ./
+COPY operator/Makefile operator/Cargo.toml operator/Cargo.lock operator/go.mod operator/go.sum ./
 COPY operator/api api
 COPY operator/lib lib
-RUN make crds-rs
-
 COPY operator/compute-pcrs/Cargo.toml compute-pcrs/
 COPY operator/compute-pcrs/src/lib.rs compute-pcrs/src/
 
 # Set only required crates as members to minimize rebuilds upon changes.
-# Build dependencies in lower layer to make use of caching.
 # Pin reference-values to specific commit for reproducible builds
-ARG REFERENCE_VALUES_COMMIT=52e7c3084891e2a30544a3c1df624a68d25fe151
+ARG REFERENCE_VALUES_COMMIT=e296603ca106908258ac59326b001b602ed0f037
 RUN sed -i 's/members =.*/members = ["compute-pcrs", "lib"]/' Cargo.toml && \
     git clone https://github.com/trusted-execution-clusters/reference-values && \
     cd reference-values && git checkout ${REFERENCE_VALUES_COMMIT} && cd .. && \
-    cargo build -p compute-pcrs --lib $(if [ "$build_type" = release ]; then echo --release; fi)
+    make crds-rs
+
+# In debug builds, build dependencies to avoid full rebuild.
+RUN if [ "$build_type" = debug ]; then cargo build -p compute-pcrs; fi
 
 COPY operator/compute-pcrs/src compute-pcrs/src
 RUN cargo build -p compute-pcrs $(if [ "$build_type" = release ]; then echo --release; fi)
