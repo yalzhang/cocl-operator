@@ -18,22 +18,19 @@ COPY operator/Containerfile .
 RUN /detector.sh ./Containerfile /drift-cache/operator/Containerfile
 
 WORKDIR /build
-COPY operator/Makefile .
-RUN make build-tools
-
-COPY operator/Cargo.toml operator/Cargo.lock operator/go.mod operator/go.sum ./
+COPY operator/Makefile operator/Cargo.toml operator/Cargo.lock operator/go.mod operator/go.sum ./
 COPY operator/api api
 COPY operator/lib lib
-RUN make crds-rs
-
 COPY operator/operator/Cargo.toml operator/
 COPY operator/operator/src/lib.rs operator/src/
 
 # Set only required crates as members to minimize rebuilds upon changes.
-# Build dependencies in lower layer to make use of caching.
 RUN sed -i 's/members = .*/members = ["lib", "operator"]/' Cargo.toml && \
     sed -i '/\[dev-dependencies\]/,$d' operator/Cargo.toml && \
-    cargo build -p operator --lib $(if [ "$build_type" = release ]; then echo --release; fi)
+    make crds-rs
+
+# In debug builds, build dependencies to avoid full rebuild.
+RUN if [ "$build_type" = debug ]; then cargo build -p operator; fi
 
 # Target build stage
 COPY operator/operator/src operator/src
