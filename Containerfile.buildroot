@@ -22,6 +22,7 @@ RUN dnf install -y \
     gcc-c++ \
     make \
     git \
+    jq \
     openssl-devel \
     pkgconfig \
     && dnf clean all
