@@ -11,3 +11,6 @@
 [submodule "reference-values"]
 	path = reference-values
 	url = https://github.com/trusted-execution-clusters/reference-values.git
+[submodule "clevis-pin-trustee"]
+	path = clevis-pin-trustee
+	url = https://github.com/latchset/clevis-pin-trustee.git

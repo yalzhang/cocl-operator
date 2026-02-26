@@ -22,12 +22,14 @@ COPY operator/lib lib
 COPY operator/register-server/Cargo.toml register-server/
 COPY operator/register-server/src/lib.rs register-server/src/
 COPY compute-pcrs/lib /build/compute-pcrs
+COPY clevis-pin-trustee /build/clevis-pin-trustee
 
 # Set only required crates as members to minimize rebuilds upon changes.
-# Patch compute-pcrs-lib to use local path instead of git for hermetic builds
+# Patch git dependencies to use local paths for hermetic builds
 RUN sed -i 's/members =.*/members = ["lib", "register-server"]/' Cargo.toml && \
     sed -i '/\[dev-dependencies\]/,$d' register-server/Cargo.toml && \
-    sed -i 's|compute-pcrs-lib = { git = "https://github.com/trusted-execution-clusters/compute-pcrs" }|compute-pcrs-lib = { path = "compute-pcrs" }|' Cargo.toml
+    sed -i 's|compute-pcrs-lib = { git = "https://github.com/trusted-execution-clusters/compute-pcrs" }|compute-pcrs-lib = { path = "compute-pcrs" }|' Cargo.toml && \
+    sed -i 's|clevis-pin-trustee-lib = { git = "https://github.com/latchset/clevis-pin-trustee" }|clevis-pin-trustee-lib = { path = "clevis-pin-trustee" }|' Cargo.toml
 
 # Pre-build Go tools for hermetic builds (avoiding go install commands that require network)
 RUN mkdir -p bin && \
@@ -36,7 +38,8 @@ RUN mkdir -p bin && \
     go build -o bin/controller-gen-${CONTROLLER_TOOLS_VERSION} sigs.k8s.io/controller-tools/cmd/controller-gen && \
     go build -o bin/yq-${YQ_VERSION} github.com/mikefarah/yq/v4
 
-RUN make crds-rs
+# Extract KOPIUM_VERSION from Cargo.lock to avoid cargo metadata call that requires network
+RUN export KOPIUM_VERSION=$(grep -A 1 '^name = "kopium"' Cargo.lock | grep '^version' | cut -d'"' -f2) && make crds-rs
 
 # In debug builds, build dependencies to avoid full rebuild.
 RUN if [ "$build_type" = debug ]; then cargo build -p register-server --lib; fi

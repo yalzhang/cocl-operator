@@ -37,7 +37,8 @@ RUN mkdir -p bin && \
     go build -o bin/controller-gen-${CONTROLLER_TOOLS_VERSION} sigs.k8s.io/controller-tools/cmd/controller-gen && \
     go build -o bin/yq-${YQ_VERSION} github.com/mikefarah/yq/v4
 
-RUN make crds-rs
+# Extract KOPIUM_VERSION from Cargo.lock to avoid cargo metadata call that requires network
+RUN export KOPIUM_VERSION=$(grep -A 1 '^name = "kopium"' Cargo.lock | grep '^version' | cut -d'"' -f2) && make crds-rs
 
 # In debug builds, build dependencies to avoid full rebuild.
 RUN if [ "$build_type" = debug ]; then cargo build -p compute-pcrs; fi
