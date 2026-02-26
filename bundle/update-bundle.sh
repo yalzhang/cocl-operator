@@ -9,7 +9,7 @@ set -euo pipefail
 # When component builds complete, Konflux will send PRs to update these digests
 # IMPORTANT: Must use @sha256: format, NOT tags - Konflux only updates digest references
 export OPERATOR_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/confidential-cluster-operator@sha256:ff5b70a9cf101120b6851cf0cbed8940d640e87b4b8192e86d00cc6a0866dcd8"
-export COMPUTE_PCRS_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/compute-pcrs@sha256:5d8c78eaa793ed38b5e4f0480edb62ce3bc1e242983a688a6168c69efda1ff74"
+export COMPUTE_PCRS_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/compute-pcrs@sha256:dd6b443b519e959157192a826928db6ff913cab35286b2f6af1f55100eefd4b3"
 export REG_SERVER_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/registration-server@sha256:38692fa492e924882495c1c7bd55ddc2efaa989a5bacbf77ba356e01820e549b"
 export ATTESTATION_KEY_REGISTER_IMAGE="quay.io/redhat-user-workloads/cocl-operator-tenant/attestation-key-register@sha256:b5c4f1c846c50f14513054b69aae500212021b51f73149a67f55d85224a7aae8"
 export TRUSTEE_IMAGE="quay.io/trusted-execution-clusters/key-broker-service@sha256:1cf0ba784437f83e7f459e91f17615c9bf5c8068a0212b72fd9fc1babcbf6764"
