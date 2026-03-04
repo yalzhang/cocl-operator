@@ -35,5 +35,19 @@ RUN cargo build -p attestation-key-register $(if [ "$build_type" = release ]; th
 FROM registry.access.redhat.com/ubi9/ubi-minimal
 ARG build_type
 COPY --from=builder "/build/target/$build_type/attestation-key-register" /usr/bin
+
+# Red Hat labels
+LABEL vendor="Red Hat, Inc." \
+      name="confidential-clusters-beta/attestation-key-register" \
+      version="4.21" \
+      release="1" \
+      description="Attestation key registration tool for confidential cluster operator" \
+      io.k8s.description="Service for registering and managing attestation keys for confidential workloads" \
+      url="https://github.com/confidential-clusters/operator" \
+      vcs-type="git" \
+      vcs-ref="" \
+      distribution-scope="public" \
+      com.redhat.component="confidential-cluster-operator-attestation-key-register"
+
 EXPOSE 8001
 ENTRYPOINT ["/usr/bin/attestation-key-register"]
