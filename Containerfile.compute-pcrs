@@ -41,3 +41,16 @@ FROM registry.access.redhat.com/ubi9/ubi-minimal
 ARG build_type
 COPY --from=builder "/build/target/$build_type/compute-pcrs" /usr/bin
 COPY --from=builder /build/reference-values /reference-values
+
+# Red Hat labels
+LABEL vendor="Red Hat, Inc." \
+      name="confidential-clusters-beta/compute-pcrs" \
+      version="4.21" \
+      release="1" \
+      description="PCR computation tool for confidential cluster operator" \
+      io.k8s.description="Tool for computing Platform Configuration Register values for confidential VMs" \
+      url="https://github.com/confidential-clusters/operator" \
+      vcs-type="git" \
+      vcs-ref="" \
+      distribution-scope="public" \
+      com.redhat.component="confidential-cluster-operator-compute-pcrs"

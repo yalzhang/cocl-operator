@@ -36,5 +36,19 @@ RUN cargo build -p register-server $(if [ "$build_type" = release ]; then echo -
 FROM registry.access.redhat.com/ubi9/ubi-minimal
 ARG build_type
 COPY --from=builder "/build/target/$build_type/register-server" /usr/bin
+
+# Red Hat labels
+LABEL vendor="Red Hat, Inc." \
+      name="confidential-clusters-beta/registration-server" \
+      version="4.21" \
+      release="1" \
+      description="Registration server for confidential cluster operator" \
+      io.k8s.description="HTTP server for registering confidential workloads and managing attestation" \
+      url="https://github.com/confidential-clusters/operator" \
+      vcs-type="git" \
+      vcs-ref="" \
+      distribution-scope="public" \
+      com.redhat.component="confidential-cluster-operator-registration-server"
+
 EXPOSE 3030
 ENTRYPOINT ["/usr/bin/register-server"]

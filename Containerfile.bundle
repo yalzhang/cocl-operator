@@ -72,3 +72,16 @@ LABEL operators.operatorframework.io.bundle.metadata.v1="metadata/"
 LABEL operators.operatorframework.io.bundle.package.v1="confidential-cluster-operator"
 LABEL operators.operatorframework.io.bundle.channels.v1="alpha"
 LABEL operators.operatorframework.io.bundle.channel.default.v1="alpha"
+
+# Red Hat labels
+LABEL vendor="Red Hat, Inc." \
+      name="confidential-clusters-beta/confidential-cluster-operator-bundle" \
+      version="4.21" \
+      release="1" \
+      description="OLM bundle for confidential cluster operator" \
+      io.k8s.description="Operator Lifecycle Manager bundle with CSV and CRDs for confidential cluster operator" \
+      url="https://github.com/confidential-clusters/operator" \
+      vcs-type="git" \
+      vcs-ref="" \
+      distribution-scope="public" \
+      com.redhat.component="confidential-cluster-operator-bundle"
