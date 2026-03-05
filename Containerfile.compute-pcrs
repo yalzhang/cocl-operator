@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 ARG build_type
-FROM quay.io/redhat-user-workloads/cocl-operator-tenant/buildroot:latest AS builder
+FROM registry.redhat.io/confidential-clusters-beta/buildroot-rhel9@sha256:c805e1edfa7f5be0705cc4a88cece359636a06c3b2aa63a6a739cf763267a8b4 AS builder
 ARG build_type
 WORKDIR /build
 
