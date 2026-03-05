@@ -51,4 +51,16 @@ yq -i '(.spec.customresourcedefinitions.owned[] | select(.kind == "Machine")).de
 echo "-->  - Updating bundle metadata package name..."
 yq -i '.annotations."operators.operatorframework.io.bundle.package.v1" = "confidential-cluster-operator"' "${BUNDLE_METADATA}/annotations.yaml"
 
+echo "-->  - Adding required OLM feature annotations..."
+yq -i '.metadata.annotations."features.operators.openshift.io/disconnected" = "false"' "${CSV_FILE}"
+yq -i '.metadata.annotations."features.operators.openshift.io/fips-compliant" = "false"' "${CSV_FILE}"
+yq -i '.metadata.annotations."features.operators.openshift.io/proxy-aware" = "false"' "${CSV_FILE}"
+yq -i '.metadata.annotations."features.operators.openshift.io/tls-profiles" = "false"' "${CSV_FILE}"
+yq -i '.metadata.annotations."features.operators.openshift.io/token-auth-aws" = "false"' "${CSV_FILE}"
+yq -i '.metadata.annotations."features.operators.openshift.io/token-auth-azure" = "false"' "${CSV_FILE}"
+yq -i '.metadata.annotations."features.operators.openshift.io/token-auth-gcp" = "false"' "${CSV_FILE}"
+
+echo "-->  - Adding subscription annotation..."
+yq -i '.metadata.annotations."operators.openshift.io/valid-subscription" = "[\"OpenShift Container Platform\", \"OpenShift Container Platform Plus\"]"' "${CSV_FILE}"
+
 echo "--> Bundle customization complete."
