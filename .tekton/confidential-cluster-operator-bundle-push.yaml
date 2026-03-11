@@ -28,7 +28,7 @@ spec:
     value: Containerfile.bundle
   - name: build-args
     value:
-    - TAG=0.1.0
+    - TAG=0.2.1
   pipelineSpec:
     description: |
       This pipeline is ideal for building container images from a Containerfile while maintaining trust after pipeline customization.
