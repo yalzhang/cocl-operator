@@ -4,22 +4,22 @@
         {
             "schema": "olm.package",
             "name": "confidential-cluster-operator",
-            "defaultChannel": "alpha"
+            "defaultChannel": "dev-preview"
         },
         {
             "schema": "olm.channel",
-            "name": "alpha",
+            "name": "dev-preview",
             "package": "confidential-cluster-operator",
             "entries": [
                 {
-                    "name": "confidential-cluster-operator.v0.1.0",
-                    "skipRange": "<0.1.0"
+                    "name": "confidential-cluster-operator.v0.2.1",
+                    "skipRange": "<0.2.1"
                 }
             ]
         },
         {
             "schema": "olm.bundle",
-            "image": "registry.stage.redhat.io/confidential-clusters-beta/confidential-cluster-operator-bundle@sha256:10de90e517fcb94fd578b2e386ed3887e9d9c3f0c554d0979413606ef9ae7bcc"
+            "image": "registry.redhat.io/confidential-clusters-beta/confidential-cluster-operator-bundle@sha256:66a6ce0c3b77f54dcefa9bb76cd0b6a2de4b09bbd3ae074a3a0af740dfe16e08"
         }
     ]
 }
