@@ -45,7 +45,7 @@ COPY --from=builder /build/reference-values /reference-values
 # Red Hat labels
 LABEL vendor="Red Hat, Inc." \
       name="confidential-clusters-beta/compute-pcrs" \
-      version="4.21" \
+      version="0.2.1" \
       release="1" \
       description="PCR computation tool for confidential cluster operator" \
       io.k8s.description="Tool for computing Platform Configuration Register values for confidential VMs" \

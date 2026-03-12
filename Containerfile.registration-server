@@ -40,7 +40,7 @@ COPY --from=builder "/build/target/$build_type/register-server" /usr/bin
 # Red Hat labels
 LABEL vendor="Red Hat, Inc." \
       name="confidential-clusters-beta/registration-server" \
-      version="4.21" \
+      version="0.2.1" \
       release="1" \
       description="Registration server for confidential cluster operator" \
       io.k8s.description="HTTP server for registering confidential workloads and managing attestation" \

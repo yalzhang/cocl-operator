@@ -39,7 +39,7 @@ COPY --from=builder "/build/target/$build_type/attestation-key-register" /usr/bi
 # Red Hat labels
 LABEL vendor="Red Hat, Inc." \
       name="confidential-clusters-beta/attestation-key-register" \
-      version="4.21" \
+      version="0.2.1" \
       release="1" \
       description="Attestation key registration tool for confidential cluster operator" \
       io.k8s.description="Service for registering and managing attestation keys for confidential workloads" \
