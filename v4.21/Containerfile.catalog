@@ -14,7 +14,7 @@ LABEL operators.operatorframework.io.index.configs.v1=/configs
 # Red Hat labels
 LABEL vendor="Red Hat, Inc." \
       name="confidential-clusters-beta/confidential-cluster-operator-fbc" \
-      version="4.21" \
+      version="0.2.1" \
       release="1" \
       description="File-Based Catalog for confidential cluster operator" \
       io.k8s.description="OLM File-Based Catalog containing operator metadata for confidential cluster operator" \

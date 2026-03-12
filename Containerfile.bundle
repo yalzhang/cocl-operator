@@ -76,7 +76,7 @@ LABEL operators.operatorframework.io.bundle.channel.default.v1="alpha"
 # Red Hat labels
 LABEL vendor="Red Hat, Inc." \
       name="confidential-clusters-beta/confidential-cluster-operator-bundle" \
-      version="4.21" \
+      version="0.2.1" \
       release="1" \
       description="OLM bundle for confidential cluster operator" \
       io.k8s.description="Operator Lifecycle Manager bundle with CSV and CRDs for confidential cluster operator" \

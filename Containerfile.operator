@@ -44,7 +44,7 @@ COPY --from=builder "/build/target/$build_type/operator" /usr/bin
 # Red Hat labels
 LABEL vendor="Red Hat, Inc." \
       name="confidential-clusters-beta/confidential-cluster-operator" \
-      version="4.21" \
+      version="0.2.1" \
       release="1" \
       description="confidential cluster operator - manages confidential computing resources on OpenShift" \
       io.k8s.description="Kubernetes operator for managing confidential clusters with trusted execution environments" \
